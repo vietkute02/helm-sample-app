@@ -1,17 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helm-example.fullname" . }}
+  name: sigma-interactive-api
   labels:
-    {{- include "helm-example.labels" . | nindent 4 }}
+    app: sigma-interactive-api
+    group: sigma-interactive
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
+      app: sigma-interactive-api
+      group: sigma-interactive
       {{- include "helm-example.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
+        app: sigma-interactive-api
+        group: sigma-interactive
         {{- include "helm-example.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -22,22 +27,25 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: sigma-interactive-api
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/interactive/v1/health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/interactive/v1/health
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,48 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sigma-dai-cube-stripprefix
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  stripPrefix:
+    prefixes:
+      - /api/ssai/cube
+    forceSlash: false
+
+
+
+---
+
+# cors header
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sigma-dai-cube-cors
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  headers:
+    accessControlAllowHeaders: 
+      - "*"
+    accessControlAllowMethods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+      - "PATCH"
+      - "PUT"
+      - "DELETE"
+    accessControlAllowOriginList: 
+      - "*"
+    accessControlMaxAge: 100
+    addVaryHeader: true

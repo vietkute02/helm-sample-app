@@ -1,0 +1,23 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app: sigma-interactive-api
+    group: sigma-interactive
+  name: sigma-interactive-api
+  namespace: sigma-interactive
+spec:
+  entryPoints:
+    - web
+    - web-secure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/api/interactive/v1`)
+      middlewares:
+        - name: multi-tenancies
+          namespace: dev-solution
+      services:
+        - kind: Service
+          name: sigma-interactive-api
+          port: 80
+          strategy: RoundRobin

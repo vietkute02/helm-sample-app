@@ -1,0 +1,1004 @@
+---
+# Source: sigma-dai/templates/config-map.yaml
+apiVersion: v1
+data:
+  default.yaml: |+
+    
+    ##################################
+    #
+    #  Microservice Configuration
+    #
+    ##################################
+    
+    ---
+    # =================================================================
+    # Server
+    # =================================================================
+    grpc:
+      port: 50051
+    
+    http:
+      port: 8080
+      host: 0.0.0.0
+      base_path: "/api/ssai"
+    
+    expose:
+      api: ''
+      public: 'http://123.31.18.25:2180'
+    
+    # =================================================================
+    # Database Configuration
+    # =================================================================
+    mongo:
+      database: sigma-dai
+      uri: mongodb://vtvcabon:yBXwYVSyJD8P@172.16.11.43:3337,172.16.11.44:3337,172.16.11.45:3337/sigma-dai?replicaSet=mongo_rep&authSource=admin&w=1
+    
+    rabbitmq:
+      exchange: sigma-dai-job-update
+      routing_key: sigma-dai
+      urls:
+      - amqp://admin:admin@172.16.11.47:5672
+      - amqp://admin:admin@172.16.11.48:5672
+      - amqp://admin:admin@172.16.11.49:5672
+    
+    posthog:
+      api_key: phc_avzaqN234uWZpkAx8tBbuLnjtW1cl2SnXoICkeRmdfY
+      host: http://172.16.11.95:8000
+    
+    minio:
+      access_key: FOUAKURHNFXZDXFTZDYI
+      bucket: thumbs
+      endpoint: minio-external.production-solution.svc.cluster.local
+      port: 9001
+      region: us-east-1
+      secret_key: VO7SVX5O2BMNG/QWCZANY/J4UVMMPNK3SV8D797B
+    
+    redis:
+      clusters:
+      - host: 172.16.11.92
+        port: 6379
+      - host: 172.16.11.93
+        port: 6379
+      - host: 172.16.11.94
+        port: 6379
+    
+    click_house:
+      database: posthog
+      host: 172.16.11.95,
+      password: ssai
+      port: 8123
+      username: UbZF6CeS
+    
+    kafka:
+      ADS_EVENT: ads_event
+      urls:
+      - 172.16.11.71:9092
+      - 172.16.11.72:9092
+      - 172.16.11.73:9092
+    
+    
+    # =================================================================
+    # Dependencies Services
+    # =================================================================
+    dependencies:
+      asset_vast_handler:
+        host:  sigma-dai-vast-asset-handler
+        port:  80
+        base_path: /asset-vast
+        timeout: 5s
+    
+    
+    # =================================================================
+    # Service Configuration
+    # =================================================================
+    
+    # CDN prefix replace cho ads segments
+    cdn_default: https://dev-livestream.gviet.vn/asset  
+    
+    log:
+      level: 2
+    
+    
+kind: ConfigMap
+metadata:
+  labels:
+    app: sigma-dai-config
+    group: sigma-dai
+  name: sigma-dai-config
+  namespace: "sigma-dai"
+---
+# Source: sigma-dai/templates/sigma-dai-manipulation/config-map.yaml
+apiVersion: v1
+data:
+  default.yaml: |+
+    
+    ##################################
+    #
+    #  Microservice Configuration
+    #
+    ##################################
+    
+    ---
+    # =================================================================
+    # Server
+    # =================================================================
+    grpc:
+      port: 50051
+    
+    http:
+      port: 8080
+      host: 0.0.0.0
+      base_path: "/api/ssai"
+    
+    expose:
+      api: ''
+      public: 'http://123.31.18.25:2180'
+    
+    # =================================================================
+    # Database Configuration
+    # =================================================================
+    mongo:
+      database: sigma-dai
+      uri: mongodb://vtvcabon:yBXwYVSyJD8P@172.16.11.43:3337,172.16.11.44:3337,172.16.11.45:3337/sigma-dai?replicaSet=mongo_rep&authSource=admin&w=1
+    
+    rabbitmq:
+      exchange: sigma-dai-job-update
+      routing_key: sigma-dai
+      urls:
+      - amqp://admin:admin@172.16.11.47:5672
+      - amqp://admin:admin@172.16.11.48:5672
+      - amqp://admin:admin@172.16.11.49:5672
+    
+    posthog:
+      api_key: phc_avzaqN234uWZpkAx8tBbuLnjtW1cl2SnXoICkeRmdfY
+      host: http://172.16.11.95:8000
+    
+    minio:
+      access_key: FOUAKURHNFXZDXFTZDYI
+      bucket: thumbs
+      endpoint: minio-external.production-solution.svc.cluster.local
+      port: 9001
+      region: us-east-1
+      secret_key: VO7SVX5O2BMNG/QWCZANY/J4UVMMPNK3SV8D797B
+    
+    redis:
+      clusters:
+      - host: 172.16.11.92
+        port: 6379
+      - host: 172.16.11.93
+        port: 6379
+      - host: 172.16.11.94
+        port: 6379
+    
+    click_house:
+      database: posthog
+      host: 172.16.11.95,
+      password: ssai
+      port: 8123
+      username: UbZF6CeS
+    
+    kafka:
+      ADS_EVENT: ads_event
+      urls:
+      - 172.16.11.71:9092
+      - 172.16.11.72:9092
+      - 172.16.11.73:9092
+    
+    
+    # =================================================================
+    # Dependencies Services
+    # =================================================================
+    dependencies:
+      asset_vast_handler:
+        host:  sigma-dai-vast-asset-handler
+        port:  80
+        base_path: /asset-vast
+        timeout: 5s
+    
+    
+    # =================================================================
+    # Service Configuration
+    # =================================================================
+    
+    # CDN prefix replace cho ads segments
+    cdn_default: https://dev-livestream.gviet.vn/asset  
+    
+    log:
+      level: 2
+    
+    
+kind: ConfigMap
+metadata:
+  name: sigma-dai-manipulation-conf
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-manipulation-conf
+    group: sigma-dai
+---
+# Source: sigma-dai/templates/sigma-dai-ads-conditioner/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-ads-conditioner
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-ads-conditioner
+    group: sigma-dai
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-analysis-consumer/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-analysis-consumer
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-analysis-consumer
+    group: sigma-dai
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-api/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-api
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-api
+    group: sigma-dai
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-cube/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-cube
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 4000
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-manipulation/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-manipulation
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-manipulation
+    group: sigma-dai
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-tracking-consumer/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-tracking-consumer
+  labels:
+    app: sigma-dai-tracking-consumer
+    group: sigma-dai
+  namespace: "sigma-dai"
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-vast-asset-handler/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-dai-vast-asset-handler
+  labels:
+    app: sigma-dai-vast-asset-handler
+    group: sigma-dai
+  namespace: "sigma-dai"
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-job-worker/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-job-worker
+  labels:
+    app: sigma-job-worker
+    group: sigma-dai
+  namespace: "sigma-dai"
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+---
+# Source: sigma-dai/templates/sigma-dai-ads-conditioner/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-ads-conditioner
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-ads-conditioner
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-ads-conditioner
+      group: sigma-dai
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-ads-conditioner
+        group: sigma-dai
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-ads-conditioner
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-ads-conditioner:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-ads-conditioner-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-ads-conditioner-config
+---
+# Source: sigma-dai/templates/sigma-dai-analysis-consumer/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-analysis-consumer
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-analysis-consumer
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-analysis-consumer
+      group: sigma-dai
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-analysis-consumer
+        group: sigma-dai
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-analysis-consumer
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-analysis-consumer:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-analysis-consumer-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-analysis-consumer-config
+---
+# Source: sigma-dai/templates/sigma-dai-api/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-api
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-api
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-api
+      group: sigma-dai
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+        app: sigma-dai-api
+        group: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-api
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-api:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/ssai/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/ssai/health
+              port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-api-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-api-config
+---
+# Source: sigma-dai/templates/sigma-dai-cube/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-cube
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-cube
+      group: sigma-dai
+      app.kubernetes.io/name: sigma-dai
+      app.kubernetes.io/instance: sigma-dai
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-cube
+        group: sigma-dai
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-cube
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-cube:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: CUBEJS_DB_TYPE
+              value: clickhouse
+            - name: CUBEJS_API_SECRET
+              value: ""
+            - name: CUBEJS_CACHE_AND_QUEUE_DRIVER
+              value: memory
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /cube/conf/config/default.yaml
+              name: sigma-dai-cube-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-cube-config
+---
+# Source: sigma-dai/templates/sigma-dai-manipulation/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-manipulation
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-manipulation
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-manipulation
+      group: sigma-dai
+      app.kubernetes.io/name: sigma-dai
+      app.kubernetes.io/instance: sigma-dai
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-manipulation
+        group: sigma-dai
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-manipulation
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-manipulation:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /manifest/manipulation/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /manifest/manipulation/health
+              port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-manipulation-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-manipulation-conf
+        name: sigma-dai-manipulation-config
+---
+# Source: sigma-dai/templates/sigma-dai-tracking-consumer/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-tracking-consumer
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-tracking-consumer
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-tracking-consumer
+      group: sigma-dai
+      app.kubernetes.io/name: sigma-dai
+      app.kubernetes.io/instance: sigma-dai
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-tracking-consumer
+        group: sigma-dai
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-tracking-consumer
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-tracking-consumer:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-tracking-consumer-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-tracking-consumer-config
+---
+# Source: sigma-dai/templates/sigma-dai-vast-asset-handler/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-vast-asset-handler
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-vast-asset-handler
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-dai-vast-asset-handler
+      group: sigma-dai
+      app.kubernetes.io/name: sigma-dai
+      app.kubernetes.io/instance: sigma-dai
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-vast-asset-handler
+        group: sigma-dai
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-dai-vast-asset-handler
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/sigma-dai-vast-asset-handler:1.0.0-beta.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-vast-asset-handler-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-vast-asset-handler-config
+---
+# Source: sigma-dai/templates/sigma-job-worker/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-job-worker
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-job-worker
+    group: sigma-dai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigma-job-worker
+      group: sigma-dai
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sigma-dai
+        app.kubernetes.io/instance: sigma-dai
+        app: sigma-job-worker
+        group: sigma-dai
+    spec:
+      imagePullSecrets:
+        - name: gviet
+      securityContext:
+        {}
+      containers:
+        - name: sigma-job-worker
+          securityContext:
+            {}
+          image: "registry.gviet.vn:5000/sigma-livestream/livestream-job:2.2.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/jobs/health
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/jobs/health
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-api-config
+              subPath: default.yaml
+      nodeSelector:
+        node-role.sigmaott.com/sigma-dai: "true"
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-api-config
+---
+# Source: sigma-dai/templates/sigma-dai-manipulation/ingress.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: sigma-dai-manipulation
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-manipulation
+    group: sigma-dai
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    kubernetes.io/ingress.class: 'nginx'
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: sigma-dai-manipulation
+          servicePort: 80
+        path: /manifest/manipulation
+        pathType: ImplementationSpecific
+---
+# Source: sigma-dai/templates/sigma-dai-api/IngressRoute.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sigma-dai-api
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-api
+    group: sigma-dai
+spec:
+  entryPoints:
+    - web
+    - web-secure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/api/ssai`)
+      middlewares:
+        - name: multi-tenancies
+          namespace: sigma-auth
+        - name: sigma-dai-api-cors
+      services:
+        - kind: Service
+          name: sigma-dai-api
+          port: 80
+          strategy: RoundRobin
+---
+# Source: sigma-dai/templates/sigma-dai-cube/ir.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sigma-dai-cube
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/api/ssai/cube`)
+      services:
+        - kind: Service
+          name: sigma-dai-cube
+          port: 80
+          strategy: RoundRobin
+      middlewares: 
+        - name: multi-tenancies
+          namespace: sigma-auth
+        - name: sigma-dai-cube-cors
+        - name: sigma-dai-cube-stripprefix
+---
+# Source: sigma-dai/templates/sigma-dai-api/middleware.yaml
+# cors header
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sigma-dai-api-cors
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-api
+    group: sigma-dai
+spec:
+  headers:
+    accessControlAllowHeaders: 
+      - "*"
+    accessControlAllowMethods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+      - "PATCH"
+      - "PUT"
+      - "DELETE"
+    accessControlAllowOriginList: 
+      - "*"
+    accessControlMaxAge: 100
+    addVaryHeader: true
+---
+# Source: sigma-dai/templates/sigma-dai-cube/middleware.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sigma-dai-cube-stripprefix
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+spec:
+  stripPrefix:
+    prefixes:
+      - /api/ssai/cube
+    forceSlash: false
+---
+# Source: sigma-dai/templates/sigma-dai-cube/middleware.yaml
+# cors header
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: sigma-dai-cube-cors
+  namespace: "sigma-dai"
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+spec:
+  headers:
+    accessControlAllowHeaders: 
+      - "*"
+    accessControlAllowMethods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+      - "PATCH"
+      - "PUT"
+      - "DELETE"
+    accessControlAllowOriginList: 
+      - "*"
+    accessControlMaxAge: 100
+    addVaryHeader: true

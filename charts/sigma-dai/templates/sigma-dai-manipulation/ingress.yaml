@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: sigma-dai-manipulation
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-manipulation
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    kubernetes.io/ingress.class: 'nginx'
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: sigma-dai-manipulation
+          servicePort: 80
+        path: /manifest/manipulation
+        pathType: ImplementationSpecific

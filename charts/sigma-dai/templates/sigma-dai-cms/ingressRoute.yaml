@@ -1,0 +1,25 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sigma-dai-cms
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-cms
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/micro/cms/ssai`) 
+      services:
+        - kind: Service
+          name: sigma-dai-cms
+          port: 80
+          strategy: RoundRobin
+      middlewares: 
+        - name: sigma-dai-cms-strip-prefix

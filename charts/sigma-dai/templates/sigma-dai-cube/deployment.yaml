@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-cube
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+
+spec:
+  replicas: {{ .Values.cubejs.replicaCount }}
+  selector:
+    matchLabels:
+      app: sigma-dai-cube
+      group: sigma-dai
+      {{- include "helm-example.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-cube
+        group: sigma-dai
+        {{- include "helm-example.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.cubejs.podSecurityContext | nindent 8 }}
+      containers:
+        - name: sigma-dai-cube
+          securityContext:
+            {{- toYaml .Values.cubejs.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.cubejs.image.repository }}:{{ .Values.global.image.imageTag }}"
+          imagePullPolicy: {{ .Values.cubejs.image.pullPolicy }}
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: CUBEJS_DB_TYPE
+              value: clickhouse
+            - name: CUBEJS_API_SECRET
+              value: ""
+            - name: CUBEJS_CACHE_AND_QUEUE_DRIVER
+              value: memory
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {{- toYaml .Values.cubejs.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /cube/conf/config/default.yaml
+              name: sigma-dai-cube-config
+              subPath: default.yaml
+      {{- if .Values.cubejs.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.cubejs.nodeSelector "context" $) | nindent 8 }}
+      {{ else if .Values.global.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.global.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+    {{- with .Values.cubejs.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.cubejs.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-cube-config

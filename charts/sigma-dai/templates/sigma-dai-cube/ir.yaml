@@ -1,0 +1,28 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sigma-dai-cube
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-cube
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/api/ssai/cube`)
+      services:
+        - kind: Service
+          name: sigma-dai-cube
+          port: 80
+          strategy: RoundRobin
+      middlewares: 
+        - name: multi-tenancies
+          namespace: sigma-auth
+        - name: sigma-dai-cube-cors
+        - name: sigma-dai-cube-stripprefix

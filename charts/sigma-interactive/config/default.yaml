@@ -1,0 +1,81 @@
+##################################
+#                                #
+#  Microservice Configuration    #
+#                                #
+##################################
+
+---
+# =================================================================
+# Server Api configuration
+# =================================================================
+grpc:
+  port: 50051
+
+http:
+  port: 8080
+  host: 0.0.0.0
+  base_path: "/api/interactive/v1"
+
+
+# =================================================================
+# Database Configuration
+# =================================================================
+
+mongo:
+  uri: mongodb://mongodb-headless.dev-persistence:27017/ilp-campaign-service?replicaSet=rs0
+
+redis:
+  host: redis-master.dev-persistence
+  port: 6379
+  password: m1D79bBaF8
+
+rabbitmq:
+  urls:
+    - amqp://user:1@rabbitmq-headless.staging-persistence:5672
+  queue: events_processor
+
+service:
+  url: http://transcode-channel-svc.sigma-transcode-live/api/transcode/channels/{channelId}/output
+
+postgres:
+  host: postgres-svc.dev-ingest.svc
+  port: 5432
+  user: postgres
+  password: postgres
+  db: postgres
+
+supabase:
+  url: http://traefik-ingress-controller.staging-controllers.svc:8000
+  jwt_secret: 12345678912345678912345678912345mhdsbksjugivbksnfskddfldfejnjgjskejsg
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZSIsCiAgICAiaWF0IjogMTY0NjY3MjQwMCwKICAgICJleHAiOiAxODA0NDM4ODAwCn0.pCRQGvwfBa_9wMHZ5fUbBupkyPc1xIEaW2Vl2m5fuDw
+  expire_time: 86400000
+
+minio:
+  endpoint: 172.16.20.89
+  port: 9000
+  access_key: jpPANVUDd9
+  secret_key: GInrJ4Tn9RcD1aHS3zxMsVpqXoP6Jaa0t8Y7Ai3Q
+  bucket: thumbs
+  region: us-east-1
+
+kafka:
+  urls:
+    - kafka-cp-kafka.kafka.svc:9092
+  topic_event_interactive_result: INTERACTIVE_USER_TABLE
+  topic_campaign_user_result: CAMPAIGN_USER_RESULT_TABLE
+  topic_campaign_user: campaign_user_stream
+
+ksql:
+  host: http://kafka-cp-ksql-server.kafka.svc
+  port: 8088
+
+# =================================================================
+# Dependencies Services
+# =================================================================
+dependencies:
+  sigma_auth:
+    uri: auth-service.dev-solution.svc:50051
+    timeout: 5s
+  sigma_transcode_channel:
+    uri: transcode-channel-svc.sigma-transcode-live.svc:50051
+    timeout: 5s

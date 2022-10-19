@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-ads-conditioner
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-ads-conditioner
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.adsConditioner.replicaCount }}
+  selector:
+    matchLabels:
+      app: sigma-dai-ads-conditioner
+      group: sigma-dai
+      {{- if .Values.commonLabels }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 6 }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-ads-conditioner
+        group: sigma-dai
+        {{- include "helm-example.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.adsConditioner.podSecurityContext | nindent 8 }}
+      containers:
+        - name: sigma-dai-ads-conditioner
+          securityContext:
+            {{- toYaml .Values.adsConditioner.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.adsConditioner.image.repository }}:{{ .Values.global.image.imageTag }}"
+          imagePullPolicy: {{ .Values.adsConditioner.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            # - name: grpc
+            #   containerPort: 50051
+            #   protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/ssai/health
+          #     port: http
+          resources:
+            {{- toYaml .Values.adsConditioner.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /src/config/default.yaml
+              name: sigma-dai-ads-conditioner-config
+              subPath: default.yaml
+      {{- if .Values.adsConditioner.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.adsConditioner.nodeSelector "context" $) | nindent 8 }}
+      {{ else if .Values.global.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.global.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+    {{- with .Values.adsConditioner.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.adsConditioner.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      - configMap:
+          name: sigma-dai-config
+        name: sigma-dai-ads-conditioner-config

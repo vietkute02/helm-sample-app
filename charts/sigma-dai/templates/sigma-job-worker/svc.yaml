@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sigma-job-worker
+  labels:
+    app: sigma-job-worker
+    group: sigma-dai
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  type: ClusterIP
+  ports:
+  - name: rest
+    port: 8080
+    targetPort: 8080
+    protocol: TCP 
+  selector:
+    app: sigma-job-worker
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}

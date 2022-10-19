@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sigma-dai-cms
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-cms
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: sigma-dai-cms
+      group: sigma-dai
+  replicas: {{ .Values.api.replicaCount }}
+  strategy: {}
+  template:
+    metadata:
+      labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
+        app: sigma-dai-cms
+        group: sigma-dai
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+      initContainers:
+        - name: micro-cms-init
+          securityContext:
+            {{- toYaml .Values.api.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.cms.image.repository }}:{{ .Values.global.image.imageTag }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          volumeMounts:
+            - name: build-dir
+              mountPath: /opt/data/dist
+      containers:
+      - name: sigma-dai-cms
+        image: nginx:alpine
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+          - name: build-dir
+            mountPath: /usr/share/nginx/html
+          - name: conf
+            mountPath: /etc/nginx/conf.d
+      restartPolicy: Always
+      serviceAccountName: ""
+      {{- if .Values.cms.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.cms.nodeSelector "context" $) | nindent 8 }}
+      {{ else if .Values.global.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.global.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- with .Values.api.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.api.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes: 
+        - name: build-dir
+          emptyDir: {}
+        - name: conf
+          configMap:
+            name: sigma-dai-cms-conf
+      imagePullSecrets:
+        - name: gviet

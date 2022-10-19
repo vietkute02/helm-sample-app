@@ -1,0 +1,85 @@
+##################################
+#
+#  Microservice Configuration
+#
+##################################
+
+---
+# =================================================================
+# Server
+# =================================================================
+grpc:
+  port: 50051
+
+http:
+  port: 8080
+  host: 0.0.0.0
+  base_path: "/manifest/manipulation"
+
+expose:
+  api: ''
+  public: 'https://dai.sigmaott.com'
+
+# =================================================================
+# Database Configuration
+# =================================================================
+mongo:
+  {{- with .Values.config.mongo }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+rabbitmq:
+  {{- with .Values.config.rabbitmq }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+posthog:
+  {{- with .Values.config.posthog }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+minio:
+  {{- with .Values.config.minio }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+redis:
+  {{- with .Values.config.redis }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+click_house:
+  {{- with .Values.config.click_house }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+kafka:
+  {{- with .Values.config.kafka }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+
+# =================================================================
+# Dependencies Services
+# =================================================================
+dependencies:
+  asset_vast_handler:
+    host:  sigma-dai-vast-asset-handler
+    port:  80
+    base_path: /asset-vast
+    timeout: 5s
+
+
+# =================================================================
+# Service Configuration
+# =================================================================
+
+# CDN prefix replace cho ads segments
+cdn_default: https://dev-livestream.gviet.vn/asset  
+
+log:
+  level: 2
+
+environment: production
+
+go_max_procs: 6
