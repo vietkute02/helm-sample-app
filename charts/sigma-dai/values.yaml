@@ -11,7 +11,7 @@ global:
   imageRegistry: "registry.gviet.vn:5000"
   image:
     pullPolicy: IfNotPresent
-    imageTag: 1.0.0
+    imageTag: 1.2.0
 
   imagePullSecrets:
     - name: gviet
@@ -727,7 +727,6 @@ monitorConsumer:
 # =================================================================
 
 config:
-
   mongo:
     uri: mongodb://vtvcabon:yBXwYVSyJD8P@172.16.11.43:3337,172.16.11.44:3337,172.16.11.45:3337/sigma-dai?replicaSet=mongo_rep&authSource=admin&w=1
     database: sigma-dai
@@ -741,7 +740,8 @@ config:
     routing_key: 'sigma-dai'
 
   posthog:
-    host: http://172.16.11.95:8000
+    host: 172.16.11.95
+    port: 8000
     api_key: phc_lnFl14AcyshzHh7p5aCnV0ImIs8ROO43DA1KKTrXkus
 
   minio:
@@ -753,15 +753,15 @@ config:
     region: us-east-1
 
 # redis config
-redis:
-  clusters:
-  - host: 172.16.11.92
-    port: 7000
-  - host: 172.16.11.93
-    port: 7000
-  - host: 172.16.11.94
-    port: 7000
-  password: HUfg38fg
+  redis:
+    clusters:
+    - host: 172.16.11.92
+      port: 7000
+    - host: 172.16.11.93
+      port: 7000
+    - host: 172.16.11.94
+      port: 7000
+    password: HUfg38fg
 
   click_house:
      host: 172.16.11.95

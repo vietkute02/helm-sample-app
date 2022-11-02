@@ -75,7 +75,7 @@ dependencies:
 # =================================================================
 
 # CDN prefix replace cho ads segments
-cdn_default: https://dev-livestream.gviet.vn/asset  
+cdn_default: https://s3.sigmaott.com
 
 log:
   level: 2
