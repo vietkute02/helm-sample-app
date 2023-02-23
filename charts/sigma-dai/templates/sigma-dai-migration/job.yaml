@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sigma-dai-migration
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: sigma-dai-migration
+    group: sigma-dai
+    {{- if .Values.commonLabels }}
+  {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        app: sigma-dai-migration
+        group: sigma-dai
+        {{- include "helm-example.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
+      containers:
+        - name: sigma-dai-migration
+          securityContext:
+            {{- toYaml .Values.api.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.migration.image.repository }}:{{ .Values.global.image.imageTag }}"
+          imagePullPolicy: {{ .Values.migration.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /src/config/config.yaml
+              name: sigma-dai-migration-config
+              subPath: config.yaml
+      {{- if .Values.migration.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.migration.nodeSelector "context" $) | nindent 8 }}
+      {{ else if .Values.global.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.global.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+    {{- with .Values.api.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.api.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      - configMap:
+          name: sigma-dai-migration-conf
+        name: sigma-dai-migration-config

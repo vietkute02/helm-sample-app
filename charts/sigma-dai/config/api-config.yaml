@@ -18,7 +18,7 @@ http:
 
 expose:
   api: ''
-  public: 'http://123.31.18.25:2180'
+  public: 'https://dai.sigmaott.com'
 
 # =================================================================
 # Database Configuration
@@ -74,7 +74,7 @@ dependencies:
     base_path: /asset-vast
     timeout: 5s
   transcoder_management:
-    uri: api-transcoder.sigma-machine.svc 
+    uri: api-transcoder.sigma-machine.svc:50051
 
 
 

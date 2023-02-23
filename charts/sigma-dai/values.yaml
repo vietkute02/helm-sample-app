@@ -11,7 +11,7 @@ global:
   imageRegistry: "registry.gviet.vn:5000"
   image:
     pullPolicy: IfNotPresent
-    imageTag: 1.2.0
+    imageTag: 1.2.3
 
   imagePullSecrets:
     - name: gviet
@@ -654,13 +654,13 @@ jobWorker:
 
   affinity: {}
 
-monitorConsumer:
+migration:
   enabled: true
   replicaCount: 1
 
   image:
     pullPolicy: IfNotPresent
-    repository: sigma-livestream/sigma-dai-monitor-consumer
+    repository: sigma-livestream/sigma-dai-migrate
     imageTag: 2.2.2
 
   imagePullSecrets: []
@@ -721,6 +721,8 @@ monitorConsumer:
   affinity: {}
 
 
+
+
 ##### config value #####
 # =================================================================
 # Database Configuration
@@ -766,6 +768,7 @@ config:
   click_house:
      host: 172.16.11.95
      port: 8123
+     port_tcp: 9000
      password: UbZF6CeS
      username: ssai
      database: posthog
@@ -777,6 +780,7 @@ config:
     - 172.16.11.73:9092
     ADS_EVENT: 'ads_event'
     MONITOR_EVENT: 'monitor_event'
+    ADS_TRACKING: 'ads_tracking'
 
   nats:
     uri: nats://nats.nats.svc:4222

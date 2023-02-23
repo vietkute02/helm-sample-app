@@ -1,0 +1,10 @@
+click_house:
+  {{- with .Values.config.click_house }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+
+kafka:
+  {{- with .Values.config.kafka }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+ 
